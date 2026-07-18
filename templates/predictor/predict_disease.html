@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Predict Disease — MediPredict AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;" class="text-gradient">AI Disease Diagnosis</h1>
+    <p class="subtitle" style="margin-bottom: 0;">Select the symptoms you are currently experiencing. Our machine learning model will calculate the most likely matching health conditions.</p>
+</div>
+
+<form method="POST" action="{% url 'predict_disease' %}" id="prediction-form">
+    {% csrf_token %}
+    
+    <!-- Symptom search filter -->
+    <div class="glass-card" style="margin-bottom: 1.5rem; padding: 1.25rem 2rem; display: flex; gap: 1.5rem; align-items: center; justify-content: space-between;">
+        <div style="flex: 1; position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+            <input type="text" id="symptom-search" placeholder="Type to filter symptoms (e.g. fever, headache, pain)..." style="padding-left: 2.75rem;">
+        </div>
+        <div id="selection-counter" style="color: var(--text-secondary); font-weight: 500; font-size: 0.95rem;">
+            0 symptoms selected
+        </div>
+    </div>
+
+    <!-- Symptoms selection list -->
+    <div class="glass-card" style="padding: 1.5rem;">
+        <div class="symptom-selection-container">
+            <div class="symptoms-grid" id="symptoms-list-container">
+                {% for sym in symptoms %}
+                <label class="symptom-checkbox-label" data-symptom-name="{{ sym.name|lower }}">
+                    <input type="checkbox" name="symptoms" value="{{ sym.value }}" class="symptom-checkbox">
+                    <span>{{ sym.name }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" id="btn-clear-selection">
+                <i class="fa-solid fa-eraser"></i> Clear Selection
+            </button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-prediction">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Analyze Symptoms
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('symptom-search');
+        const labels = document.querySelectorAll('.symptom-checkbox-label');
+        const checkboxes = document.querySelectorAll('.symptom-checkbox');
+        const counter = document.getElementById('selection-counter');
+        const clearBtn = document.getElementById('btn-clear-selection');
+
+        // Dynamic Filtering
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            labels.forEach(label => {
+                const symptomName = label.getAttribute('data-symptom-name');
+                if (symptomName.includes(query)) {
+                    label.style.display = 'flex';
+                } else {
+                    label.style.display = 'none';
+                }
+            });
+        });
+
+        // Checked class addition & counter
+        function updateCounter() {
+            let checkedCount = 0;
+            checkboxes.forEach(cb => {
+                const label = cb.closest('.symptom-checkbox-label');
+                if (cb.checked) {
+                    label.classList.add('checked');
+                    checkedCount++;
+                } else {
+                    label.classList.remove('checked');
+                }
+            });
+            
+            counter.textContent = `${checkedCount} symptom${checkedCount !== 1 ? 's' : ''} selected`;
+            
+            // Highlight submit button if at least 2 are selected
+            const submitBtn = document.getElementById('btn-submit-prediction');
+            if (checkedCount >= 2) {
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            } else {
+                submitBtn.style.opacity = '0.7';
+            }
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateCounter);
+        });
+
+        // Clear button
+        clearBtn.addEventListener('click', function() {
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+            updateCounter();
+            searchInput.value = '';
+            labels.forEach(label => label.style.display = 'flex');
+        });
+
+        updateCounter();
+    });
+</script>
+{% endblock %}

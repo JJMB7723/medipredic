@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About the AI Model — MediPredict AI{% endblock %}
+
+{% block content %}
+<section style="padding: 5rem 5% 6rem; max-width: 900px; margin: 0 auto;">
+    <h1 style="font-size: 3rem; margin-bottom: 1.5rem;" class="text-gradient">About MediPredict AI</h1>
+    <p class="subtitle" style="font-size: 1.15rem;">
+        Discover the technology powering our machine-learning symptoms diagnostic engine.
+    </p>
+
+    <div class="glass-card" style="margin-top: 3rem; margin-bottom: 2.5rem;">
+        <h2 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i class="fa-solid fa-microchip" style="color: var(--primary-light);"></i> Random Forest Classifier
+        </h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Our core machine learning module uses an ensemble **Random Forest Classifier** trained on high-dimensional clinical symptom vector spaces. When you select your symptoms, they are encoded as a binary vector (1 for present, 0 for absent) representing 132 possible symptoms. 
+        </p>
+        <p style="color: var(--text-secondary);">
+            The model passes this vector through an ensemble of 100 decision trees. Each tree makes a classification vote based on the features, and the system aggregates these votes to predict the final prognosis with an calculated probability index (confidence score).
+        </p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 2.5rem;">
+        <div class="glass-card">
+            <h3 style="margin-bottom: 0.75rem;"><i class="fa-solid fa-database" style="color: var(--secondary);"></i> Data Integrity</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                Trained on a robust dataset matching 132 different symptoms across 41 unique infectious and systemic diseases, including respiratory, cardiovascular, digestive, and dermatological conditions.
+            </p>
+        </div>
+        <div class="glass-card">
+            <h3 style="margin-bottom: 0.75rem;"><i class="fa-solid fa-user-doctor" style="color: var(--accent);"></i> Specialist Routing</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                Based on the predicted disease, the system automatically runs database lookups to direct you to the correct class of medical professional (e.g., Dermatologist, Pulmonologist, Hepatologist).
+            </p>
+        </div>
+    </div>
+
+    <div class="glass-card" style="border-left: 4px solid var(--accent); background: rgba(244, 63, 94, 0.05);">
+        <h4 style="color: #ffffff; margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--accent); margin-right: 0.5rem;"></i> Important Educational Disclaimer</h4>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            MediPredict AI is an educational technology demonstration. It does not replace physical laboratory analyses, clinical assessments, or direct advice from certified general practitioners. Do not use this tool as a final diagnosis for treating severe acute illnesses.
+        </p>
+    </div>
+</section>
+{% endblock %}

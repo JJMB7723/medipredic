@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Dashboard — MediPredict AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;" class="text-gradient">Welcome back, {{ user.first_name|default:user.username }}!</h1>
+    <p class="subtitle" style="margin-bottom: 0;">Access your diagnostic records, recommended medications, and track your wellness history.</p>
+</div>
+
+<!-- Stats Counters Grid -->
+<div class="grid-3" style="margin-bottom: 2rem;">
+    <div class="glass-card" style="display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem 2rem;">
+        <div style="background: var(--primary-glow); padding: 1rem; border-radius: 50%; color: var(--primary-light);">
+            <i class="fa-solid fa-file-waveform" style="font-size: 1.8rem;"></i>
+        </div>
+        <div>
+            <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Total Diagnoses</span>
+            <h2 style="font-size: 1.8rem; margin-top: 0.1rem;">{{ total_predictions }}</h2>
+        </div>
+    </div>
+    
+    <div class="glass-card" style="display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem 2rem;">
+        <div style="background: var(--accent-glow); padding: 1rem; border-radius: 50%; color: var(--accent);">
+            <i class="fa-solid fa-stethoscope" style="font-size: 1.8rem;"></i>
+        </div>
+        <div>
+            <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Last Prognosis</span>
+            <h2 style="font-size: 1.3rem; margin-top: 0.1rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 180px;">
+                {% if recent_predictions %}{{ recent_predictions.0.predicted_disease }}{% else %}None{% endif %}
+            </h2>
+        </div>
+    </div>
+
+    <div class="glass-card" style="display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem 2rem;">
+        <div style="background: rgba(99, 102, 241, 0.15); padding: 1rem; border-radius: 50%; color: var(--secondary);">
+            <i class="fa-solid fa-calendar-day" style="font-size: 1.8rem;"></i>
+        </div>
+        <div>
+            <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Last Session</span>
+            <h2 style="font-size: 1.1rem; margin-top: 0.2rem; color: #ffffff;">{{ last_login|date:"Y-M-d P"|default:"Just now" }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="grid-2">
+    <!-- Recent Diagnoses List -->
+    <div class="glass-card">
+        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+            <span><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Recent Diagnostics</span>
+            {% if total_predictions > 0 %}
+                <a href="{% url 'prediction_history' %}" style="font-size: 0.85rem; font-weight: 500;">View All</a>
+            {% endif %}
+        </h3>
+        
+        {% if recent_predictions %}
+            <div class="table-container">
+                <table style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th>Condition</th>
+                            <th>Confidence</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pred in recent_predictions %}
+                        <tr>
+                            <td><b style="color: #ffffff;">{{ pred.predicted_disease }}</b></td>
+                            <td><span style="color: var(--primary-light); font-weight: 600;">{{ pred.confidence_score }}%</span></td>
+                            <td style="font-size: 0.85rem; color: var(--text-secondary);">{{ pred.created_at|date:"M d" }}</td>
+                            <td>
+                                <a href="{% url 'prediction_result' pred.id %}" style="font-size: 0.85rem; font-weight: 600; color: var(--primary-light);">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 3rem 0; color: var(--text-secondary);">
+                <i class="fa-solid fa-notes-medical" style="font-size: 3rem; opacity: 0.15; margin-bottom: 1.25rem;"></i>
+                <p style="font-size: 0.95rem; margin-bottom: 1.5rem;">You haven't run any symptoms analysis yet.</p>
+                <a href="{% url 'predict_disease' %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-stethoscope"></i> Start Diagnosis</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Active Precautions & Medications Summary -->
+    <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+        <!-- Health Recommendations -->
+        <div class="glass-card" style="flex: 1;">
+            <h3 style="margin-bottom: 1.25rem;"><i class="fa-solid fa-shield-halved" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Diagnostic Care Tips</h3>
+            {% if recommendations %}
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                    {% for rec in recommendations %}
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start; color: var(--text-secondary); font-size: 0.95rem;">
+                        <i class="fa-solid fa-circle-check" style="color: var(--success); margin-top: 0.25rem;"></i>
+                        <span>{{ rec|capfirst }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">No active diagnostic care tips. Your wellness guidelines will populate here based on your most recent symptoms diagnosis.</p>
+            {% endif %}
+        </div>
+
+        <!-- Prescribed Medications -->
+        <div class="glass-card" style="flex: 1;">
+            <h3 style="margin-bottom: 1.25rem;"><i class="fa-solid fa-pills" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Medicine Cabinet</h3>
+            {% if medicine_history %}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% for med in medicine_history %}
+                        <span class="tag tag-primary">{{ med }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">No medicines logged in history. Recommended pharmaceutical medicines will appear here once symptoms are analyzed.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

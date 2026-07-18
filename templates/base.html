@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}MediPredict AI — Empowering health through advanced symptoms-based AI disease diagnosis and predictive analytics.{% endblock %}">
+    <title>{% block title %}MediPredict AI{% endblock %}</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Premium Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Public Navbar -->
+    <nav class="navbar" id="public-navbar">
+        <a href="{% url 'home' %}" class="brand">
+            <i class="fa-solid fa-heart-pulse brand-icon"></i>
+            <span>MediPredict <span style="color: var(--primary-light)">AI</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+            <li><a href="{% url 'about' %}" class="nav-link">About AI</a></li>
+            <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+            <li><a href="{% url 'medicine_list' %}" class="nav-link">Medicines Directory</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'dashboard' %}" class="btn-nav-primary"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}" class="nav-link">Sign In</a></li>
+                <li><a href="{% url 'register' %}" class="btn-nav-primary">Get Started</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Message Alerts -->
+    {% if messages %}
+    <div class="alerts-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {% if message.tags == 'success' %}
+                <i class="fa-solid fa-circle-check"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                <i class="fa-solid fa-circle-exclamation"></i>
+            {% else %}
+                <i class="fa-solid fa-circle-info"></i>
+            {% endif %}
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Workspace Container -->
+    {% if user.is_authenticated and not is_public_page %}
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'dashboard' %}"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+                </li>
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'predict_disease' %}active{% endif %}">
+                    <a href="{% url 'predict_disease' %}"><i class="fa-solid fa-stethoscope"></i> Predict Disease</a>
+                </li>
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'bmi_calculator' %}active{% endif %}">
+                    <a href="{% url 'bmi_calculator' %}"><i class="fa-solid fa-calculator"></i> BMI Calculator</a>
+                </li>
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'prediction_history' %}active{% endif %}">
+                    <a href="{% url 'prediction_history' %}"><i class="fa-solid fa-clock-rotate-left"></i> My Reports</a>
+                </li>
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                    <a href="{% url 'profile' %}"><i class="fa-solid fa-user-gear"></i> Settings</a>
+                </li>
+                {% if user.is_staff or user.is_superuser %}
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                    <a href="{% url 'admin_dashboard' %}" style="color: var(--warning);"><i class="fa-solid fa-user-shield"></i> Admin Panel</a>
+                </li>
+                {% endif %}
+                <li class="sidebar-item" style="margin-top: auto;">
+                    <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" style="color: var(--accent);">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                    </a>
+                    <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Sidebar Content -->
+        <main class="main-content">
+            {% block dashboard_content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+        <!-- Full Page Content (for Public Pages) -->
+        <main style="flex: 1;">
+            {% block content %}{% endblock %}
+        </main>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 MediPredict AI Medical Systems Inc. All rights reserved.</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.5;">Disclaimer: AI models provide probability indices based on statistical training data. Always seek professional physical clinical examinations.</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

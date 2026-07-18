@@ -1,0 +1,9 @@
+Django>=4.2,<5.1
+pymysql
+cryptography
+pandas
+numpy
+scikit-learn
+reportlab
+python-dotenv
+gunicorn

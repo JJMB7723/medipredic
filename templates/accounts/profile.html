@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Account Settings — MediPredict AI{% endblock %}
+
+{% block dashboard_content %}
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;" class="text-gradient">Profile & Settings</h1>
+    <p class="subtitle" style="margin-bottom: 0;">Update your personal details, biological metrics, and customize your profile description.</p>
+</div>
+
+<form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="grid-2">
+        <!-- Account Details Card -->
+        <div class="glass-card">
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-user-circle" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Account details</h3>
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ field.errors.0 }}</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Health Metrics & Bio Card -->
+        <div class="glass-card">
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-heart-pulse" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Biological Metrics</h3>
+            
+            <div class="grid-2" style="gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="id_age">Age (Years)</label>
+                    {{ profile_form.age }}
+                    {% if profile_form.age.errors %}
+                        <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ profile_form.age.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="id_gender">Gender</label>
+                    {{ profile_form.gender }}
+                    {% if profile_form.gender.errors %}
+                        <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ profile_form.gender.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid-2" style="gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="id_height_cm">Height (cm)</label>
+                    {{ profile_form.height_cm }}
+                    {% if profile_form.height_cm.errors %}
+                        <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ profile_form.height_cm.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="id_weight_kg">Weight (kg)</label>
+                    {{ profile_form.weight_kg }}
+                    {% if profile_form.weight_kg.errors %}
+                        <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ profile_form.weight_kg.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_bio">Bio / Notes</label>
+                {{ profile_form.bio }}
+                {% if profile_form.bio.errors %}
+                    <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ profile_form.bio.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_profile_picture">Profile Image</label>
+                {{ profile_form.profile_picture }}
+                {% if profile_form.profile_picture.errors %}
+                    <span style="color: var(--danger); font-size: 0.8rem; display: block; margin-top: 0.25rem;">{{ profile_form.profile_picture.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Settings button -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+        <button type="submit" class="btn btn-primary" style="padding-left: 3rem; padding-right: 3rem;">
+            <i class="fa-solid fa-save"></i> Save Settings
+        </button>
+    </div>
+</form>
+{% endblock %}
+```

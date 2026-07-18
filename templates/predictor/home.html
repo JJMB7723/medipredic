@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}MediPredict AI — Symptoms-Based Disease Classifier{% endblock %}
+
+{% block content %}
+<section class="hero-section" style="padding: 6rem 5% 5rem; text-align: center; max-width: 900px; margin: 0 auto;">
+    <h1 style="font-size: 4rem; line-height: 1.1; margin-bottom: 1.5rem;" class="text-gradient">
+        Predict Diseases from Symptoms, Instantly.
+    </h1>
+    <p class="subtitle" style="font-size: 1.25rem;">
+        Using state-of-the-art Random Forest machine learning algorithms trained on over 8,000 diagnostic samples, MediPredict AI delivers symptom-to-prognosis reports in seconds.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 4rem;">
+        {% if user.is_authenticated %}
+            <a href="{% url 'predict_disease' %}" class="btn btn-primary"><i class="fa-solid fa-stethoscope"></i> Start Diagnosis</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fa-solid fa-gauge"></i> Go to Dashboard</a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-primary">Create Free Account</a>
+            <a href="{% url 'login' %}" class="btn btn-secondary">Sign In</a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Feature Showcase -->
+<section style="padding: 2rem 5% 5rem;">
+    <div class="grid-3" style="max-width: 1200px; margin: 0 auto;">
+        <div class="glass-card">
+            <i class="fa-solid fa-brain" style="font-size: 2.5rem; color: var(--primary-light); margin-bottom: 1.5rem;"></i>
+            <h3>Random Forest Classifier</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.95rem;">
+                Advanced machine learning checks 132 symptom dimensions simultaneously to output statistical prognosis matching 41 major illnesses.
+            </p>
+        </div>
+        <div class="glass-card">
+            <i class="fa-solid fa-file-pdf" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1.5rem;"></i>
+            <h3>Downloadable PDF Reports</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.95rem;">
+                Generate formatted diagnostic summaries containing suggested medications, precautions, and specialist medical care recommendations.
+            </p>
+        </div>
+        <div class="glass-card">
+            <i class="fa-solid fa-scale-balanced" style="font-size: 2.5rem; color: var(--secondary); margin-bottom: 1.5rem;"></i>
+            <h3>BMI Health Metrics</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.95rem;">
+                Calculate body mass indexes and store historical physical metrics directly into your profile for ongoing health check tracking.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Health Tips Carousel-like section -->
+<section style="background: rgba(15, 23, 42, 0.4); padding: 5rem 5% 6rem; border-top: 1px solid var(--border-color);">
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 2.2rem; margin-bottom: 1rem;" class="text-gradient">Daily Wellness Tips</h2>
+        <p class="subtitle">Quick routines to optimize your physiological wellness.</p>
+        
+        <div class="grid-2" style="margin-top: 3rem; text-align: left;">
+            {% for tip in health_tips %}
+            <div class="glass-card" style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                <div style="background: var(--primary-glow); padding: 1rem; border-radius: 50%; color: var(--primary-light);">
+                    <i class="fa-solid {{ tip.icon }}" style="font-size: 1.5rem;"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">{{ tip.title }}</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">{{ tip.text }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
