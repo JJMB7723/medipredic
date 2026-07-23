@@ -46,6 +46,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_public_page'] = True
         # Add basic health tips
         context['health_tips'] = [
             {"title": "Stay Hydrated", "text": "Drink at least 8-10 glasses of water daily to flush out toxins and keep your body energized.", "icon": "fa-droplet"},
@@ -58,10 +59,20 @@ class HomeView(TemplateView):
 class AboutView(TemplateView):
     template_name = 'predictor/about.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_public_page'] = True
+        return context
+
 class ContactView(FormView):
     form_class = ContactForm
     template_name = 'predictor/contact.html'
     success_url = reverse_lazy('contact')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_public_page'] = True
+        return context
 
     def form_valid(self, form):
         name = form.cleaned_data['name']

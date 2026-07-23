@@ -1,0 +1,70 @@
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;" class="text-gradient">Body Mass Index Calculator</h1>
+    <p class="subtitle" style="margin-bottom: 0;">Calculate your BMI based on your height and weight, and monitor your physical fitness index.</p>
+</div>
+
+<div class="bmi-container">
+    <!-- BMI Form -->
+    <div class="glass-card">
+        <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-weight-scale" style="color: var(--primary-light);"></i> Input Your Metrics</h3>
+        <form method="POST" action="{% url 'bmi_calculator' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="id_height">Height (cm)</label>
+                {{ form.height }}
+                {% if form.height.errors %}
+                    <span style="color: var(--danger); font-size: 0.8rem;">{{ form.height.errors.0 }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="id_weight">Weight (kg)</label>
+                {{ form.weight }}
+                {% if form.weight.errors %}
+                    <span style="color: var(--danger); font-size: 0.8rem;">{{ form.weight.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                <i class="fa-solid fa-calculator"></i> Calculate BMI
+            </button>
+        </form>
+    </div>
+
+    <!-- BMI Result -->
+    <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center;">
+        {% if bmi %}
+            <div style="text-align: center;">
+                <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;">Your BMI Score</span>
+                <h2 style="font-size: 4rem; margin-top: 0.25rem;" class="text-gradient">{{ bmi }}</h2>
+                <span class="bmi-badge {{ css_class }}">{{ category }}</span>
+            </div>
+
+            <!-- Animated Slider Meter -->
+            <div class="bmi-meter-bg">
+                <div class="bmi-meter-bar"></div>
+                <div class="bmi-pointer" id="bmi-pointer-el" style="left: 50%;">
+                    <div class="bmi-pointer-value">{{ bmi }}</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2rem;">
+                <span>15 (Under)</span>
+                <span>18.5 (Normal)</span>
+                <span>25 (Over)</span>
+                <span>30 (Obese)</span>
+                <span>35+</span>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); border: 1px solid var(--border-color); padding: 1.25rem;">
+                <h4 style="color: #ffffff; margin-bottom: 0.5rem;"><i class="fa-solid fa-heart-pulse" style="color: var(--primary-light);"></i> Health Advice</h4>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">{{ advice }}</p>
+            </div>
+        {% else %}
+            <div style="text-align: center; color: var(--text-secondary); padding: 3rem 0;">
+                <i class="fa-solid fa-calculator" style="font-size: 4rem; opacity: 0.15; margin-bottom: 1.5rem;"></i>
+                <p>Input your weight and height on the left panel to calculate your Body Mass Index results instantly.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>

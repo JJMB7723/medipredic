@@ -67,6 +67,9 @@
                 <li class="sidebar-item {% if request.resolver_match.url_name == 'bmi_calculator' %}active{% endif %}">
                     <a href="{% url 'bmi_calculator' %}"><i class="fa-solid fa-calculator"></i> BMI Calculator</a>
                 </li>
+                <li class="sidebar-item {% if request.resolver_match.url_name == 'medicine_list' or request.resolver_match.url_name == 'medicine_detail' %}active{% endif %}">
+                    <a href="{% url 'medicine_list' %}"><i class="fa-solid fa-pills"></i> Medicines Catalog</a>
+                </li>
                 <li class="sidebar-item {% if request.resolver_match.url_name == 'prediction_history' %}active{% endif %}">
                     <a href="{% url 'prediction_history' %}"><i class="fa-solid fa-clock-rotate-left"></i> My Reports</a>
                 </li>

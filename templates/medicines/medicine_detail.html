@@ -3,43 +3,41 @@
 
 {% block title %}{{ medicine.medicine_name }} Details — MediPredict AI{% endblock %}
 
-{% block content %}
-<section style="padding: 5rem 5% 6rem; max-width: 800px; margin: 0 auto;">
-    <div style="margin-bottom: 2rem;">
-        <a href="{% url 'medicine_list' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Medicines Catalog</a>
+{% block dashboard_content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'medicine_list' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Medicines Catalog</a>
+</div>
+
+<div class="result-card" style="max-width: 800px; margin: 0 auto;">
+    <div style="margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
+        <span style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Pharmaceutical Information</span>
+        <h1 style="font-size: 2.5rem; margin-top: 0.25rem;" class="text-gradient">{{ medicine.medicine_name }}</h1>
+        <p style="color: var(--text-secondary); margin-top: 0.25rem;">Prescribed for clinical condition: <b style="color: #ffffff;">{{ medicine.disease.name }}</b></p>
     </div>
 
-    <div class="result-card">
-        <div style="margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem;">
-            <span style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Pharmaceutical Information</span>
-            <h1 style="font-size: 2.5rem; margin-top: 0.25rem;" class="text-gradient">{{ medicine.medicine_name }}</h1>
-            <p style="color: var(--text-secondary); margin-top: 0.25rem;">Prescribed for clinical condition: <b style="color: #ffffff;">{{ medicine.disease.name }}</b></p>
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <!-- Dosage -->
+        <div>
+            <h3 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-clock" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Standard Dosage Guidelines</h3>
+            <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;">{{ medicine.dosage }}</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 2rem;">
-            <!-- Dosage -->
-            <div>
-                <h3 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-clock" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Standard Dosage Guidelines</h3>
-                <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;">{{ medicine.dosage }}</p>
-            </div>
-
-            <!-- Side Effects -->
-            <div>
-                <h3 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Common Side Effects</h3>
-                <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;">{{ medicine.side_effects }}</p>
-            </div>
-
-            <!-- Warnings -->
-            <div style="background: rgba(239, 68, 68, 0.05); border-left: 4px solid var(--danger); padding: 1.5rem; border-radius: var(--radius-sm);">
-                <h4 style="color: #ffffff; margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); margin-right: 0.5rem;"></i> Contraindications & Safety Warnings</h4>
-                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">{{ medicine.warnings }}</p>
-            </div>
+        <!-- Side Effects -->
+        <div>
+            <h3 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--primary-light); margin-right: 0.5rem;"></i> Common Side Effects</h3>
+            <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;">{{ medicine.side_effects }}</p>
         </div>
 
-        <!-- Disclaimer -->
-        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; text-align: center;">
-            <p>Disclaimer: This catalog listing is for educational reference only. Do not self-medicate or modify prescribed drug dosages without direct consultations from a certified physician.</p>
+        <!-- Warnings -->
+        <div style="background: rgba(239, 68, 68, 0.05); border-left: 4px solid var(--danger); padding: 1.5rem; border-radius: var(--radius-sm);">
+            <h4 style="color: #ffffff; margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); margin-right: 0.5rem;"></i> Contraindications & Safety Warnings</h4>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">{{ medicine.warnings }}</p>
         </div>
     </div>
-</section>
+
+    <!-- Disclaimer -->
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; text-align: center;">
+        <p>Disclaimer: This catalog listing is for educational reference only. Do not self-medicate or modify prescribed drug dosages without direct consultations from a certified physician.</p>
+    </div>
+</div>
 {% endblock %}
