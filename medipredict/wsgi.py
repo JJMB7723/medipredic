@@ -9,8 +9,15 @@ try:
     print("[*] Running automatic database migrations on startup...")
     call_command('migrate', interactive=False)
     print("[*] Database migrations completed successfully.")
+    
+    # Auto-create superuser
+    from django.contrib.auth.models import User
+    if not User.objects.filter(username='admin').exists():
+        print("[*] Creating default admin superuser...")
+        User.objects.create_superuser('admin', 'admin@medipredict.com', 'AdminPass123!')
+        print("[*] Default admin superuser created.")
 except Exception as e:
-    print(f"[!] Database migrations failed: {e}")
+    print(f"[!] Database migrations / superuser creation failed: {e}")
 
 try:
     print("[*] Running automatic collectstatic on startup...")
