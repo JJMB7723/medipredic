@@ -3,6 +3,19 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Python 3.14 compatibility monkey-patch for Django template context copying
+try:
+    from django.template.context import BaseContext
+    def _patched_copy(self):
+        duplicate = self.__class__.__new__(self.__class__)
+        duplicate.__dict__.update(self.__dict__)
+        duplicate.dicts = self.dicts[:]
+        return duplicate
+    BaseContext.__copy__ = _patched_copy
+except Exception as e:
+    pass
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
